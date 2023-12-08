@@ -5,66 +5,83 @@ At my organization, access to restricted content is controlled with an allow lis
 <br />
 
 
-<h2>Check file and directory details</h2>
+<h2>Open the file that contains the allow list</h2>
 
 
 </b> 
 <p align="center">
-The following code demonstrates how I used Linux commands to determine the existing permissions set for a specific directory in the file system: <br/>
-<img src="https://imgur.com/KILjgAr.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+For the first part of the algorithm, I opened the "allow_list.txt" file. First, I assigned this file name as a string to the import_file variable: <br/>
+<img src="https://imgur.com/2tbmNmb.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+
+
+<p align="center">
+Then, I used a with statement to open the file: <br/>
+<img src="https://imgur.com/2sEndyq.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
   
-The first line of the screenshot displays the command I entered, and the other lines display the output. The code lists all contents of the projects directory. I used the ls command with the -la option to display a detailed listing of the file contents that also returned hidden files. The output of my command indicates that there is one directory named drafts, one hidden file named .project_x.txt, and five other project files. The 10-character string in the first column represents the permissions set on each file or directory. 
+In my algorithm, the with statement is used with the .open() function in read mode to open the allow list file for the purpose of reading it. The purpose of opening the file is to allow me to access the IP addresses stored in the allow list file. The with keyword will help manage the resources by closing the file after exiting the with statement. In the code with open (import_file, "r") as file:, the open() function has two parameters. The first identifies the file to import, and then the second indicates what I want to do with the file. In this case, "r" indicates that I want to read it. The code also uses the as keyword to assign a variable named file; file stores the output of the .open() function while I work within the with statement.
 <br />
 <br />
 
-<h2>Describe the permissions string</h2>
+<h2>Read the file contents</h2>
 
-The 10-character string can be deconstructed to determine who is authorized to access the file and their specific permissions. The characters and what they represent are as follows:
-  - 1st character: This character is either a d or hyphen (-) and indicates the file type. If it’s a d, it’s a directory. If it’s a hyphen (-), it’s a regular file.
-  - 2nd-4th characters: These characters indicate the read (r), write (w), and execute (x) permissions for the user. When one of these characters is a hyphen (-) instead, it indicates that this permission is not granted to the user.
-  - 5th-7th characters: These characters indicate the read (r), write (w), and execute (x) permissions for the group. When one of these characters is a hyphen (-) instead, it indicates that this permission is not granted for the group.
-  - 8th-10th characters: These characters indicate the read (r), write (w), and execute (x) permissions for other. This owner type consists of all other users on the system apart from the user and the group. When one of these characters is a hyphen (-) instead, that indicates that this permission is not granted for other.
+<p align="center">
+In order to read the file contents, I used the .read() method to convert it into the string. <br/>
+<img src="https://imgur.com/c6iUPAY.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+
+When using an .open() function that includes the argument "r" for “read,” I can call the .read() function in the body of the with statement. The .read() method converts the file into a string and allows me to read it. I applied the .read() method to the file variable identified in the with statement. Then, I assigned the string output of this method to the variable ip_addresses.
+
+In summary, this code reads the contents of the "allow_list.txt" file into a string format that allows me to later use the string to organize and extract data in my Python program.
 
 </b>
 
-<h2>Change file permissions</h2>
-
-The organization determined that others shouldn't have write access to any of their files. To comply with this, I referred to the file permissions that I previously returned. I determined project_k.txt must have the write access removed for other.
+<h2>Convert the string into a list</h2>
 
 </b>
 <p align="center">
-The following code demonstrates how I used Linux commands to do this:<br/>
-<img src="https://imgur.com/ukRU0ou.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+In order to remove individual IP addresses from the allow list, I needed it to be in list format. Therefore, I next used the .split() method to convert the ip_addresses string into a list:<br/>
+<img src="https://imgur.com/f1ki3Dg.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
 
-The first two lines of the screenshot display the commands I entered, and the other lines display the output of the second command. The chmod command changes the permissions on files and directories. The first argument indicates what permissions should be changed, and the second argument specifies the file or directory. In this example, I removed write permissions from other for the project_k.txt file. After this, I used ls -la to review the updates I made.
+The .split() function is called by appending it to a string variable. It works by converting the contents of a string to a list. The purpose of splitting ip_addresses into a list is to make it easier to remove IP addresses from the allow list. By default, the .split() function splits the text by whitespace into list elements. In this algorithm, the .split() function takes the data stored in the variable ip_addresses, which is a string of IP addresses that are each separated by a whitespace, and it converts this string into a list of IP addresses. To store this list, I reassigned it back to the variable ip_addresses.
 
-<h2>Change file permissions on a hidden file</h2>
-
-The research team at my organization recently archived project_x.txt. They do not want anyone to have write access to this project, but the user and group should have read access.
+<h2>Iterate through the remove list</h2>
 
 </b>
 <p align="center">
-The following code demonstrates how I used Linux commands to change the permissions:<br/>
-<img src="https://imgur.com/KDBcBeO.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+A key part of my algorithm involves iterating through the IP addresses that are elements in the remove_list. To do this, I incorporated a for loop:<br/>
+<img src="https://imgur.com/EmSXue9.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
 
-The first two lines of the screenshot display the commands I entered, and the other lines display the output of the second command. I know .project_x.txt is a hidden file because it starts with a period (.). In this example, I removed write permissions from the user and group, and added read permissions to the group. I removed write permissions from the user with u-w. Then, I removed write permissions from the group with g-w, and added read
-permissions to the group with g+r.
+The for loop in Python repeats code for a specified sequence. The overall purpose of the for loop in a Python algorithm like this is to apply specific code statements to all elements in a sequence. The for keyword starts the for loop. It is followed by the loop variable element and the keyword in. The keyword in indicates to iterate through the sequence ip_addresses and assign each value to the loop variable element.
 
-<h2>Change directory permissions</h2>
-
-My organization only wants the researcher2 user to have access to the drafts directory and its contents. This means that no one other than researcher2 should have execute permissions.
+<h2>Remove IP addresses that are on the remove list</h2>
 
 </b>
 <p align="center">
-The following code demonstrates how I used Linux commands to change the permissions:<br/>
-<img src="https://imgur.com/qQIjDdp.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+My algorithm requires removing any IP address from the allow list, ip_addresses, that is also contained in remove_list. Because there were not any duplicates in ip_addresses, I was able to use the following code to do this:<br/>
+<img src="https://imgur.com/5x5WmsC.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
 
-The first two lines of the screenshot display the commands I entered, and the other lines display the output of the second command. I previously determined that the group had execute permissions, so I used the chmod command to remove them. The researcher2 user already had execute permissions, so they did not need to be added.
+First, within my for loop, I created a conditional that evaluated whether or not the loop variable element was found in the ip_addresses list. I did this because applying .remove() to elements that were not found in ip_addresses would result in an error.
+
+Then, within that conditional, I applied .remove() to ip_addresses. I passed in the loop variable element as the argument so that each IP address that was in the remove_list would be removed from ip_addresses.
+
+<h2>Update the file with the revised list of IP addresses</h2>
+
+<p align="center">
+As a final step in my algorithm, I needed to update the allow list file with the revised list of IP addresses. To do so, I first needed to convert the list back into a string. I used the .join() method for this:<br/>
+<img src="https://imgur.com/Dq7cugb.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+
+The .join() method combines all items in an iterable into a string. The .join() method is applied to a string containing characters that will separate the elements in the iterable once joined into a string. In this algorithm, I used the .join() method to create a string from the list ip_addresses so that I could pass it in as an argument to the .write() method when writing to the file "allow_list.txt". I used the string ("\n") as the separator to instruct Python to place each element on a new line.
+
+<p align="center">
+Then, I used another with statement and the .write() method to update the file:<br/>
+<img src="https://imgur.com/pjQnrOk.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+
+This time, I used a second argument of "w" with the open() function in my with statement. This argument indicates that I want to open a file to write over its contents. When using this argument "w", I can call the .write() function in the body of the with statement. The .write() function writes string data to a specified file and replaces any existing file content.
+
+In this case I wanted to write the updated allow list as a string to the file "allow_list.txt". This way, the restricted content will no longer be accessible to any IP addresses that were removed from the allow list. To rewrite the file, I appended the .write() function to the file object file that I identified in the with statement. I passed in the ip_addresses variable as the argument to specify that the contents of the file specified in the with statement should be replaced with the data in this variable.
 
 <h2>Summary</h2>
 
-I changed multiple permissions to match the level of authorization my organization wanted for files and directories in the projects directory. The first step in this was using ls -la to check the permissions for the directory. This informed my decisions in the following steps. I then used the chmod command multiple times to change the permissions on files and
-directories.
+I created an algorithm that removes IP addresses identified in a remove_list variable from the "allow_list.txt" file of approved IP addresses. This algorithm involved opening the file, converting it to a string to be read, and then converting this string to a list stored in the variable ip_addresses. I then iterated through the IP addresses in remove_list. With each iteration, I evaluated if the element was part of the ip_addresses list. If it was, I applied the .remove() method to it to remove the element from ip_addresses.. After this, I used the .join() method to convert the ip_addresses back into a string so that I could write over the contents of the "allow_list.txt" file with the revised list of IP addresses.
 
 </p>
 
